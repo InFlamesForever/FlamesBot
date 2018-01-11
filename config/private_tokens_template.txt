@@ -1,0 +1,7 @@
+Create a file called private_tokens.json, then copy in the following json
+and replace the tokens with your values
+
+
+{
+  "botToken" : "discord-bot-token-here"
+}
