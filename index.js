@@ -2,15 +2,17 @@
 //import npm libraries
 //********************************************************************************************************
 const Discord = require('discord.js'); // npm install discord.js --save
+const mtg = require('mtgsdk');
 
 //import local config files
 //********************************************************************************************************
-const botSettings = require('./botSettings.json');
+const botSettings = require('./config/botSettings.json');
+const tokens = require('./config/private_tokens.json');
 
 
 //get bot settings e.g. token, prefix, etc and assign to local variables
 //********************************************************************************************************
-const botToken = botSettings.botToken;
+const botToken = tokens.botToken;
 const botPrefix = botSettings.prefix;
 const debug = botSettings.debug;
 
@@ -89,9 +91,20 @@ bot.on ('message', msg =>
 
         //Start of command
         //********************************************************************************************************
-        else if (command === 'PLACEHOLDER1')
+        else if (command === 'LOOKUP')
         {
-            msg.reply('Command=' + command + ' param1=' + param1 + ' param2=' + param2 + ' param3=' + param3);
+            //This command will be used to lookup cards
+            // partial name match
+            mtg.card.where({name: '"Archangel Avacyn"'})
+                .then(results => {
+                    console.log(results)
+                });
+
+            // exact name match
+            mtg.card.where({name: '"Archangel Avacyn"'})
+                .then(results => {
+                    console.log(results)
+                });
         }
         //********************************************************************************************************
         //End of command

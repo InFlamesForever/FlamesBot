@@ -4,7 +4,8 @@
   "description": "An MTG bot for discord",
   "main": "index.js",
   "dependencies": {
-    "discord.js": "^11.2.1"
+    "discord.js": "^11.2.1",
+    "mtgsdk": "^0.3.0"
   },
   "devDependencies": {},
   "scripts": {
