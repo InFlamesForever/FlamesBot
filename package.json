@@ -1,0 +1,23 @@
+{
+  "name": "mtgdiscordbot",
+  "version": "0.0.1",
+  "description": "An MTG bot for discord",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^11.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/InFlamesForever/MTGDiscordBot.git"
+  },
+  "author": "InFlamesForever",
+  "license": "GNU General Public License v3.0",
+  "bugs": {
+    "url": "https://github.com/InFlamesForever/MTGDiscordBot/issues"
+  },
+  "homepage": "https://github.com/InFlamesForever/MTGDiscordBot#readme"
+}
