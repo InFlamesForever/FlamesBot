@@ -2,10 +2,12 @@
   "name": "mtgdiscordbot",
   "version": "0.0.1",
   "description": "An MTG bot for discord",
-  "main": "index.js",
+  "main": "src/index.js",
   "dependencies": {
     "discord.js": "^11.2.1",
-    "mtgsdk": "^0.3.0"
+    "json-query": "^2.2.2",
+    "mtgsdk": "^0.3.0",
+    "tinyreq": "^3.3.1"
   },
   "devDependencies": {},
   "scripts": {

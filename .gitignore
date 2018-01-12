@@ -61,3 +61,4 @@ typings/
 MTGDiscordBot.iml
 package-lock.json
 config/private_tokens.json
+resources/jsonCache
