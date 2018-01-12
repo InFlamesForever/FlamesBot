@@ -31,14 +31,12 @@ let bot = new Discord.Client({});
 bot.on
 ('ready', () =>
 {
-    //cleanUp();
+    cleanUp();
     if (debug)
     {
         console.log('Logging in ...');
         console.log('Logged in as: ' + bot.user.tag + ' - (' + bot.user.id + ')'); //This will display the name in package.name and it's registered Discord ClientID
     }
-
-    mtgFunctions.findSetByCode("mm3").then(result => console.log(result))
 }
 );
 

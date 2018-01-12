@@ -4,6 +4,12 @@ const fs = require('fs');
 const jsonQuery = require('json-query');
 const request = require("tinyreq");
 
+const red   = [255, 0, 0];
+const black = [0, 0, 0];
+const blue  = [0, 0, 255];
+const green = [0, 255, 0];
+const white = [255, 255, 255];
+const gold  = [255, 223, 0];
 
 module.exports = {
     /**
@@ -18,7 +24,33 @@ module.exports = {
         let type = cardJson.type !== undefined ? cardJson.type : "";
         let rarity = cardJson.rarity !== undefined ? cardJson.rarity : "";
         let oracleText = cardJson.text !== undefined ? cardJson.text : "";
-        let imageUrl = cardJson.imageUrl !== undefined ? cardJson.imageUrl : "../resources/noImageFound.jpg";
+        let imageUrl = cardJson.imageUrl;
+        let color;
+        if(cardJson.colors.length === 1)
+        {
+            switch (cardJson.colors[0].toUpperCase())
+            {
+                case "GREEN":
+                    color = green;
+                    break;
+                case "WHITE":
+                    color = white;
+                    break;
+                case "BLACK":
+                    color = black;
+                    break;
+                case "RED":
+                    color = red;
+                    break;
+                case "BLUE":
+                    color = blue;
+                    break;
+            }
+        }
+        else
+        {
+            color = gold;
+        }
 
         msg.channel.send(
             new Discord.RichEmbed()
@@ -26,7 +58,7 @@ module.exports = {
                 /*
                  * Alternatively, use "#00AE86", [0, 174, 134] or an integer number.
                  */
-                .setColor([255, 0, 0])
+                .setColor(color)
                 .setDescription(type + " | " + rarity +
                     "\n\n" + oracleText)
                 .setFooter("By MTG Bot")
@@ -43,7 +75,7 @@ module.exports = {
     {
         let namesArr = [];
         cardListJson.forEach(card =>{
-            namesArr.push(card.name)
+            namesArr.push(card.name + " " +  card.set)
         });
         msg.channel.send(
             new Discord.RichEmbed()
@@ -51,7 +83,6 @@ module.exports = {
                 .setColor([255, 255, 255])
                 .setDescription(namesArr.join("\n"))
                 .setFooter("By MTG Bot")
-                .setImage("./resources/noImageFound.jpg")
                 /*
                  * Takes a Date object, defaults to current date.
                  */
