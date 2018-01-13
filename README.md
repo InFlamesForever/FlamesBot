@@ -3,6 +3,8 @@ A discord bot for an assortment of MTG related tasks
 
 
 Planned features:
+Store cards after they've been retrieved then search that json before sending off
+- deep info after first info
 - Price lookup (maybe purchase integration)
 - Card lookup - oracle text, legality
 - Banlists

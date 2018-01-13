@@ -100,6 +100,7 @@ bot.on ('message', msg =>
             mtgFunctions.findSetByCode(args[args.length-1]).then(set =>{
                 if(set !== undefined)
                 {
+                    args.pop();
                     testLookup.doCommand(msg, args.join(" "), set);
                 }
                 else
