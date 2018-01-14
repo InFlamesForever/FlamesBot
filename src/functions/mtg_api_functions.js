@@ -71,6 +71,11 @@ module.exports = {
 
     },
 
+    /**
+     *
+     * @param msg
+     * @param cardListJson
+     */
     printEmbeddedCardList(msg, cardListJson)
     {
         let namesArr = [];
