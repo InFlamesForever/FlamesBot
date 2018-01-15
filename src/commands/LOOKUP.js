@@ -37,14 +37,17 @@ module.exports = class LOOKUP
                     {
                         if(set !== undefined)
                         {
+                            set = set.toUpperCase();
                             let i = 0;
+                            let found = false;
                             results.forEach(card => {
                                 i++;
                                 if(card.set === set.code && card.name === param)
                                 {
-                                    LOOKUP.__printCard(msg, card)
+                                    LOOKUP.__printCard(msg, card);
+                                    found = true;
                                 }
-                                else if(i === results.length)
+                                else if(i === results.length && found === false)
                                 {
                                     msg.reply("Invalid input!");
                                     mtgFunctions.printEmbeddedCardList(msg, results)
