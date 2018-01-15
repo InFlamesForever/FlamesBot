@@ -37,12 +37,13 @@ module.exports = class LOOKUP
                     {
                         if(set !== undefined)
                         {
-                            set = set.toUpperCase();
+                            let setCode = set.code.toUpperCase();
+                            let cardName = param.toUpperCase();
                             let i = 0;
                             let found = false;
                             results.forEach(card => {
                                 i++;
-                                if(card.set === set.code && card.name === param)
+                                if(card.set === setCode && card.name.toUpperCase() === cardName)
                                 {
                                     LOOKUP.__printCard(msg, card);
                                     found = true;
@@ -56,7 +57,24 @@ module.exports = class LOOKUP
                         }
                         else
                         {
-                            mtgFunctions.printEmbeddedCardList(msg, results)
+                            let found = false;
+                            let cardName = param.toUpperCase();
+                            results.forEach(card => {
+                                if(!found && card.name.toUpperCase() === cardName)
+                                {
+                                    LOOKUP.__printCard(msg, card);
+                                    found = true;
+                                }
+
+                            });
+                            if(found)
+                            {
+                                mtgFunctions.printEmbeddedCardList(msg, results, "Also found:")
+                            }
+                            else
+                            {
+                                mtgFunctions.printEmbeddedCardList(msg, results)
+                            }
                         }
                     }
                 });
@@ -68,9 +86,18 @@ module.exports = class LOOKUP
 
     }
 
+    /**
+     * Prints the card to discord, if there is a flip side to
+     * the card, this is also printed
+     *
+     * @param msg - the discord message from the user
+     * @param card - the found card
+     * @private
+     */
     static __printCard(msg, card)
     {
         mtgFunctions.printEmbeddedCard(msg, card);
+        //Prints the flip side of a card if it has a flip side
         if(Array.isArray(card.names) && card.names.length === 2)
         {
             mtgFunctions.getCardJson(card.names[1]).then(results =>
@@ -84,6 +111,10 @@ module.exports = class LOOKUP
         }
     }
 
+    /**
+     * Returns a description of the command
+     * @returns {string}
+     */
     static getDescription()
     {
         return "This command looks up a card"
