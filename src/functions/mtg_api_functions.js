@@ -1,7 +1,6 @@
 const mtg = require('mtgsdk');
 const Discord = require('discord.js');
 const fs = require('fs');
-const jsonQuery = require('json-query');
 const request = require("tinyreq");
 
 const red   = [255, 0, 0];
