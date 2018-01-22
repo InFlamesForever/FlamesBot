@@ -7,6 +7,7 @@ const fs = require('fs');
 
 
 const mtgFunctions = require('./functions/mtg_api_functions');
+const utilities = require("./functions/utlities");
 
 //import local config files
 //********************************************************************************************************
@@ -100,6 +101,7 @@ bot.on ('message', msg =>
             mtgFunctions.findSetByCode(args[args.length-1]).then(set =>{
                 if(set !== undefined)
                 {
+                    utilities.logDebugText("got inside");
                     args.pop();
                     testLookup.doCommand(msg, args.join(" "), set);
                 }
@@ -135,13 +137,7 @@ bot.on ('message', msg =>
 
 //Start of functions
 //********************************************************************************************************
-function logDebugText(text)
-{
-    if(debug)
-    {
-        console.log(text)
-    }
-}
+
 
 function cleanUp()
 {
@@ -161,7 +157,7 @@ function cleanUp()
     }
     catch (ex)
     {
-        logDebugText("Sets json does not exist \n" + ex)
+        utilities.logDebugText("Sets json does not exist \n" + ex)
     }
     try
     {
@@ -179,7 +175,7 @@ function cleanUp()
     }
     catch (ex)
     {
-        logDebugText("Cards json does not exist \n" + ex)
+        utilities.logDebugText("Cards json does not exist \n" + ex)
     }
 }
 
@@ -206,4 +202,4 @@ catch (e)
 
 //output message to console if debug value is 1 in botSettings.json
 //********************************************************************************************************
-logDebugText('bot.js loaded succesfully!');
+utilities.logDebugText('bot.js loaded succesfully!');

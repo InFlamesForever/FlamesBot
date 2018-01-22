@@ -1,5 +1,7 @@
 //Imports
 const mtgFunctions = require('../functions/mtg_api_functions');
+const utilities = require('../functions/utlities');
+const displayDiscord = require('../functions/display_on_discord');
 
 /**
  * This is the first iteration of the standard command class
@@ -23,7 +25,7 @@ module.exports = class LOOKUP
             // partial name match
             mtgFunctions.getCardJson(param)
                 .then(results => {
-                    //console.log(results);
+                    //utilities.logDebugText(results);
                     if(results.length === 0)
                     {
                         msg.reply("Couldn't find card")
@@ -35,10 +37,13 @@ module.exports = class LOOKUP
                     }
                     else
                     {
+                        //utilities.logDebugText(set);
                         if(set !== undefined)
                         {
+                            utilities.logDebugText("inside mulitple cards found, set defined");
                             let setCode = set.code.toUpperCase();
                             let cardName = param.toUpperCase();
+                            utilities.logDebugText("setCode: " + setCode + "cardname: " +cardName);
                             let i = 0;
                             let found = false;
                             results.forEach(card => {
@@ -51,7 +56,7 @@ module.exports = class LOOKUP
                                 else if(i === results.length && found === false)
                                 {
                                     msg.reply("Invalid input!");
-                                    mtgFunctions.printEmbeddedCardList(msg, results)
+                                    displayDiscord.printEmbeddedCardList(msg, results)
                                 }
                             })
                         }
@@ -69,11 +74,11 @@ module.exports = class LOOKUP
                             });
                             if(found)
                             {
-                                mtgFunctions.printEmbeddedCardList(msg, results, "Also found:")
+                                displayDiscord.printEmbeddedCardList(msg, results, "Also found:")
                             }
                             else
                             {
-                                mtgFunctions.printEmbeddedCardList(msg, results)
+                                displayDiscord.printEmbeddedCardList(msg, results)
                             }
                         }
                     }
@@ -96,7 +101,7 @@ module.exports = class LOOKUP
      */
     static __printCard(msg, card)
     {
-        mtgFunctions.printEmbeddedCard(msg, card);
+        displayDiscord.printEmbeddedCard(msg, card);
         //Prints the flip side of a card if it has a flip side
         if(Array.isArray(card.names) && card.names.length === 2)
         {
@@ -105,7 +110,7 @@ module.exports = class LOOKUP
                 if(results.length === 1)
                 {
                     msg.reply("and here's the flip side");
-                    mtgFunctions.printEmbeddedCard(msg, results[0]);
+                    displayDiscord.printEmbeddedCard(msg, results[0]);
                 }
             })
         }
