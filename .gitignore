@@ -60,5 +60,8 @@ typings/
 .idea/
 MTGDiscordBot.iml
 package-lock.json
-config/private_tokens.json
+config/private_config.json
 /resources/jsonCache/mtgSets.json
+/config/twitchConfig.json
+redisTest.js
+resources/jsonCache/

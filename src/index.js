@@ -4,6 +4,7 @@
 const Discord = require('discord.js'); // npm install discord.js --save
 const mtg = require('mtgsdk');
 const fs = require('fs');
+const twitchStuff = require("twitch-api-lite");
 
 
 const mtgFunctions = require('./functions/mtg_api_functions');
@@ -12,7 +13,7 @@ const utilities = require("./functions/utlities");
 //import local config files
 //********************************************************************************************************
 const botSettings = require('../config/botSettings.json');
-const tokens = require('../config/private_tokens.json');
+const tokens = require('../config/private_config.json');
 
 
 //get bot settings e.g. token, prefix, etc and assign to local variables
@@ -203,3 +204,13 @@ catch (e)
 //output message to console if debug value is 1 in botSettings.json
 //********************************************************************************************************
 utilities.logDebugText('bot.js loaded succesfully!');
+
+function twitchDo()
+{
+
+    twitchStuff.isTwitchUserLive("CDNThe3rd").then(isLive =>
+    {
+        console.log(isLive)
+    })
+}
+setInterval(function(){twitchDo()}, 60 * 1000);
