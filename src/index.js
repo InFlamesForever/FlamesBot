@@ -9,6 +9,7 @@ const twitchStuff = require("twitch-api-lite");
 
 const mtgFunctions = require('./functions/mtg_api_functions');
 const utilities = require("./functions/utlities");
+const StreamAnnouncement = require('./functions/StreamAnnouncement');
 
 //import local config files
 //********************************************************************************************************
@@ -205,12 +206,6 @@ catch (e)
 //********************************************************************************************************
 utilities.logDebugText('bot.js loaded succesfully!');
 
-function twitchDo()
-{
 
-    twitchStuff.isTwitchUserLive("CDNThe3rd").then(isLive =>
-    {
-        console.log(isLive)
-    })
-}
-setInterval(function(){twitchDo()}, 60 * 1000);
+let stream1 = new StreamAnnouncement(["407521504100614144"], "InFlamesForever");
+setInterval(function(){stream1.announceStream(bot);}, 5 * 60 * 1000);
