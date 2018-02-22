@@ -1,0 +1,6 @@
+Create a file called "twitch_config.json" and add the following into it, replacing the placeholder with your apps
+clientID:
+
+{
+    "clientID": "PLACEHOLDER"
+}
