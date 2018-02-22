@@ -5,12 +5,10 @@
   "main": "src/index.js",
   "dependencies": {
     "discord.js": "^11.2.1",
-    "json-query": "^2.2.2",
     "mtgsdk": "^0.3.0",
     "redis": "^2.8.0",
     "request": "^2.83.0",
     "tinyreq": "^3.3.1",
-    "twitch-api": "^0.5.0",
     "twitch-api-lite": "0.0.6"
   },
   "devDependencies": {},
