@@ -2,5 +2,7 @@ Create a file called "twitch_config.json" and add the following into it, replaci
 clientID:
 
 {
-    "clientID": "PLACEHOLDER"
+    "clientID": "PLACEHOLDER",
+    "channelsToBroadcastTo": ["CHANNEL_ID_1", "CHANNEL_ID_2", ...],
+    "channelsToAdvertise" : ["STREAMER_NAME_1", "STREAMER_NAME_2", ...]
 }

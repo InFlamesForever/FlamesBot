@@ -1,7 +1,11 @@
 //Imports
 const mtgFunctions = require('../functions/mtg_api_functions');
-const utilities = require('../functions/utlities');
-const displayDiscord = require('../functions/display_on_discord');
+const utilities = require('../../../commonFunctions/utlities');
+const displayDiscord = require('../../../commonFunctions/display_on_discord');
+
+const botSettings = require("./../../../../config/botSettings");
+
+const commandSuffix = "L";
 
 /**
  * This is the first iteration of the standard command class
@@ -122,6 +126,9 @@ module.exports = class LOOKUP
      */
     static getDescription()
     {
-        return "This command looks up a card"
+        return "Looks up a card: \n" +
+            botSettings.prefix + botSettings.mtgPrefix
+            + botSettings.connector + commandSuffix +
+            " (card name) (optional three character set code)";
     }
 };

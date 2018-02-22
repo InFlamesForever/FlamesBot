@@ -58,10 +58,8 @@ typings/
 .env
 
 .idea/
-MTGDiscordBot.iml
+FlamesBot.iml
 package-lock.json
 config/private_config.json
-/resources/jsonCache/mtgSets.json
 /config/twitch_config.json
-redisTest.js
 resources/jsonCache/

@@ -1,7 +1,8 @@
 const twitchApiLite = require("twitch-api-lite");
-const printer = require("./display_on_discord");
+const printer = require("../../../commonFunctions/display_on_discord");
 const Discord = require("discord.js");
-const twitchConfig = require("../../config/twitch_config");
+const twitchConfig = require("../../../../config/twitch_config");
+const utilities = require("../../../commonFunctions/utlities");
 
 //The time between updates to the discord message, 10 minutes
 const timeBetweenUpdates = 10 * 60 * 1000;

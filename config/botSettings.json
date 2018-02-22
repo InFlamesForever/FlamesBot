@@ -1,4 +1,6 @@
 {
   "prefix" : "!",
-  "debug" : true
+  "debug" : true,
+  "connector": "-",
+  "mtgPrefix" : "MTG"
 }

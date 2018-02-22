@@ -1,5 +1,8 @@
-# MTGDiscordBot
-A discord bot for an assortment of MTG related tasks
+# Flames' Discord Bot
+Very much still in development.
+
+This discord bot has functionality for MTG card lookup, Twitch Streaming stuff, and more
+when its added.
 
 
 Planned features:
