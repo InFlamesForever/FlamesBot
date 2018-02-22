@@ -214,5 +214,5 @@ catch (e)
 utilities.logDebugText('bot.js loaded succesfully!');
 
 
-let stream1 = new StreamAnnouncement(["407521504100614144"], "InFlamesForever");
+let stream1 = new StreamAnnouncement(["407521504100614144", "415527385773899786"], "InFlamesForever");
 setInterval(function(){stream1.announceStream(bot);}, 5 * 60 * 1000);
