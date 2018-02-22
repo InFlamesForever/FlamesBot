@@ -143,6 +143,12 @@ bot.on ('message', msg =>
 
 function cleanUp()
 {
+    const dir = './resources/jsonCache';
+
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
+
     try
     {
         fs.unlinkSync('./resources/jsonCache/mtgSets.json', function (err)
@@ -161,6 +167,7 @@ function cleanUp()
     {
         utilities.logDebugText("Sets json does not exist \n" + ex)
     }
+
     try
     {
         fs.unlinkSync('./resources/jsonCache/mtgCards.json', function (err)
