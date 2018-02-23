@@ -3,6 +3,5 @@ and replace the tokens with your values
 
 
 {
-  "botToken" : "discord-bot-token-here",
-  "streamAnnouncementChannels": ["channelId", "2ndChannelId", ...]
+  "botToken" : "discord-bot-token-here"
 }
