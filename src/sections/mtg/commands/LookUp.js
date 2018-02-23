@@ -14,85 +14,126 @@ const commandSuffix = "L";
  * Each class will have a doCommand and getDescription function
  * These will do the obvious, more probably will be added when I think about it
  */
-module.exports = class LOOKUP
+module.exports = class LookUp
 {
-    constructor(test)
+    /**
+     * empty constructor
+     */
+    constructor()
     {
-        this.test = test;
+
     }
 
-    doCommand(msg, param, set)
+    /**
+     * returns the command suffix constant
+     * @returns {string} the command suffix
+     */
+    getCommandSuffix()
+    {
+        return commandSuffix;
+    }
+
+    /**
+     * Checks if there is a set code provided then looks up the card
+     * @param msg the discord message
+     * @param args the card name with optional set parameter
+     */
+    doCommand(msg, args)
+    {
+        mtgFunctions.findSetByCode(args[args.length-1]).then(set =>
+        {
+            //If there is a set provided remove the set from the card name
+            if(set !== undefined)
+            {
+                args.pop();
+            }
+            this.__lookupCard(msg, args.join(" "), set);
+        });
+
+
+    }
+
+    /**
+     *
+     * @param msg
+     * @param cardName
+     * @param set
+     * @private
+     */
+    __lookupCard(msg, cardName, set)
     {
         try
         {
-            //This command will be used to lookup cards
-            // partial name match
-            mtgFunctions.getCardJson(param)
-                .then(results => {
-                    //utilities.logDebugText(results);
-                    if(results.length === 0)
-                    {
-                        msg.reply("Couldn't find card")
-                    }
-                    else if(results.length === 1)
-                    {
-                        msg.reply("Here's the card I found");
-                        LOOKUP.__printCard(msg, results[0])
-                    }
-                    else
-                    {
-                        //utilities.logDebugText(set);
-                        if(set !== undefined)
-                        {
-                            utilities.logDebugText("inside mulitple cards found, set defined");
-                            let setCode = set.code.toUpperCase();
-                            let cardName = param.toUpperCase();
-                            utilities.logDebugText("setCode: " + setCode + "cardname: " +cardName);
-                            let i = 0;
-                            let found = false;
-                            results.forEach(card => {
-                                i++;
-                                if(card.set === setCode && card.name.toUpperCase() === cardName)
-                                {
-                                    LOOKUP.__printCard(msg, card);
-                                    found = true;
-                                }
-                                else if(i === results.length && found === false)
-                                {
-                                    msg.reply("Invalid input!");
-                                    displayDiscord.printEmbeddedCardList(msg, results)
-                                }
-                            })
-                        }
-                        else
-                        {
-                            let found = false;
-                            let cardName = param.toUpperCase();
-                            results.forEach(card => {
-                                if(!found && card.name.toUpperCase() === cardName)
-                                {
-                                    LOOKUP.__printCard(msg, card);
-                                    found = true;
-                                }
-
-                            });
-                            if(found)
-                            {
-                                displayDiscord.printEmbeddedCardList(msg, results, "Also found:")
-                            }
-                            else
-                            {
-                                displayDiscord.printEmbeddedCardList(msg, results)
-                            }
-                        }
-                    }
-                });
+            mtgFunctions.getCardJson(cardName).then(results =>
+            {
+            if(results.length === 0)
+            {
+                msg.reply("Couldn't find card")
+            }
+            else if(results.length === 1)
+            {
+                msg.reply("Here's the card I found");
+                this.__printCard(msg, results[0])
+            }
+            else
+            {
+                if(set !== undefined)
+                {
+                    this.__MultipleCardsFoundSetDefined(msg, cardName, set, results)
+                }
+                else
+                {
+                    this.__MultipleCardsFoundSetUndefined(msg, cardName, results)
+                }
+            }
+        });
         }
         catch (ex)
         {
             console.log("error printing card", ex)
         }
+    }
 
+
+    __MultipleCardsFoundSetDefined(msg, cardName, set, cardArr)
+    {
+        let i = 0;
+        let found = false;
+        cardArr.forEach(card => {
+            i++;
+            if(card.set === set.code && card.name.toUpperCase() === cardName)
+            {
+                this.__printCard(msg, card);
+                found = true;
+            }
+            else if(i === cardArr.length && found === false)
+            {
+                msg.reply("Invalid input!");
+                displayDiscord.printEmbeddedCardList(msg, cardArr)
+            }
+        })
+    }
+
+    __MultipleCardsFoundSetUndefined(msg, cardName, cardArr)
+    {
+        let found = false;
+        cardArr.forEach(card =>
+        {
+            if(!found && card.name.toUpperCase() === cardName)
+            {
+                this.__printCard(msg, card);
+                found = true;
+            }
+
+        });
+        if(found)
+        {
+            displayDiscord.printEmbeddedCardList(msg, cardArr, "Also found:")
+        }
+        else
+        {
+            displayDiscord.printEmbeddedCardList(msg, cardArr)
+        }
     }
 
     /**
@@ -103,7 +144,7 @@ module.exports = class LOOKUP
      * @param card - the found card
      * @private
      */
-    static __printCard(msg, card)
+    __printCard(msg, card)
     {
         displayDiscord.printEmbeddedCard(msg, card);
         //Prints the flip side of a card if it has a flip side
@@ -124,7 +165,7 @@ module.exports = class LOOKUP
      * Returns a description of the command
      * @returns {string}
      */
-    static getDescription()
+    getDescription()
     {
         return "Looks up a card: \n" +
             botSettings.prefix + botSettings.mtgPrefix

@@ -2,14 +2,14 @@ const fs = require('fs');
 
 const LookUp = require("./commands/LookUp");
 
-const utilities = require();
+const utilities = require("./../../commonFunctions/utlities");
 
 
 module.exports = class MTG
 {
     constructor()
     {
-        this.commands = [new LookUp];
+        this.commands = [new LookUp()];
 
         this.__createFiles()
     }
@@ -27,6 +27,17 @@ module.exports = class MTG
         return descs;
     }
 
+    handleCommand(msg, commandSuffix, args)
+    {
+        this.commands.forEach(command =>
+        {
+            if(command.getCommandSuffix() === commandSuffix)
+            {
+                command.doCommand(msg, args)
+            }
+        })
+    }
+
     /**
      * creates the files that cache the mtg set and card information
      * @private
@@ -35,15 +46,11 @@ module.exports = class MTG
     {
         try
         {
-            fs.unlinkSync('./resources/jsonCache/mtgSets.json', function (err)
+            fs.unlinkSync('./resources/jsonCache/mtgSets.json', (err) =>
             {
                 if (err)
                 {
-                    callback(null, "error while reading file");
-                }
-                else
-                {
-                    callback(null, "file read");
+                    throw err
                 }
             });
         }
@@ -54,15 +61,11 @@ module.exports = class MTG
 
         try
         {
-            fs.unlinkSync('./resources/jsonCache/mtgCards.json', function (err)
+            fs.unlinkSync('./resources/jsonCache/mtgCards.json', (err) =>
             {
                 if (err)
                 {
-                    callback(null, "error while reading file");
-                }
-                else
-                {
-                    callback(null, "file read");
+                    throw err
                 }
             });
         }

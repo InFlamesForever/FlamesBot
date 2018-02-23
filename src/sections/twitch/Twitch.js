@@ -10,6 +10,11 @@ module.exports = class Twitch
 
     }
 
+    handleCommand(command, args)
+    {
+
+    }
+
     createFiles()
     {
 

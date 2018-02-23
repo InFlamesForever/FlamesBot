@@ -2,23 +2,36 @@
 const Discord = require('discord.js'); // npm install discord.js --save
 const fs = require('fs');
 
-
-const mtgFunctions = require('./src/sections/mtg/functions/mtg_api_functions');
+//Local stuff to import
 const utilities = require("./src/commonFunctions/utlities");
 const StreamAnnouncement = require('./src/sections/twitch/classes/StreamAnnouncement');
+const MTG = require("./src/sections/mtg/MTG");
+const Twitch = require("./src/sections/twitch/Twitch");
+
+const lookup = require("./src/sections/mtg/commands/LookUp");
 
 //import local config files
 //********************************************************************************************************
 const botSettings = require('./config/botSettings.json');
-const tokens = require('./config/private_config.json');
+const privateConfig = require('./config/private_config.json');
 const twitchConfig = require("./config/twitch_config");
 
 
 //get bot settings e.g. token, prefix, etc and assign to local variables
 //********************************************************************************************************
-const botToken = tokens.botToken;
-const botPrefix = botSettings.prefix;
-const debug = botSettings.debug;
+const botToken = privateConfig.botToken;
+const commandPrefix = botSettings.prefix;
+const commandConnector = botSettings.connector;
+
+const mtgCommandPrefix = botSettings.mtgPrefix;
+const twitchCommandPrefix = botSettings.twitchPrefix;
+
+//Section wrappers - These are initialized after the bot is started to save effort if something goes wrong
+//********************************************************************************************************
+let mtgSection;
+let twitchSection;
+
+//********************************************************************************************************
 
 // Initialize Discord Bot
 //********************************************************************************************************
@@ -26,40 +39,51 @@ let bot = new Discord.Client({});
 
 // When bot is ready, execute this code
 //********************************************************************************************************
-bot.on
-('ready', () =>
+bot.on('ready', () =>
 {
     createOrCleanNecessaryDirectoriesAndFiles();
-    if (debug)
-    {
-        console.log('Logging in ...');
-        console.log('Logged in as: ' + bot.user.tag + ' - (' + bot.user.id + ')'); //This will display the name in package.name and it's registered Discord ClientID
-    }
-}
-);
 
-// Bot is now listening in for certain commands from the discord user e.g. !Ping
+    //initialise sections only after necessary directories are created
+    mtgSection = new MTG();
+    twitchSection = new Twitch();
+
+    utilities.logDebugText('Logging in ...');
+    //This will display the name in package.name and it's registered Discord ClientID
+    utilities.logDebugText('Logged in as: ' + bot.user.tag + ' - (' + bot.user.id + ')');
+});
+
+// Bot is now listening in for certain commands from the discord user
 //********************************************************************************************************
 bot.on ('message', msg =>
 {
     //reject the following input and exit
     if(msg.author.bot) return; //if the bot is the one sending the message exit this code block.
-    if(msg.channel.type === 'dm') return; //if the bot recieves a private / direct message, ignore it and exit this code block.
+    if(msg.channel.type === 'dm') return; //if the bot receives a private / direct message, ignore it and exit this code block.
 
-    if (msg.content.substring(0, botPrefix.length) === botPrefix) //if the first string is a !, continue...
+    //Checks if the message has the command prefix
+    if (msg.content.substring(0, commandPrefix.length) === commandPrefix)
     {
-        let args = msg.content.substring(botPrefix.length, msg.content.length).toUpperCase().split(" ");
-        let command = args[0].split(botSettings.connector);
-        if(command[0] === botSettings.mtgPrefix)
+        //split the command from the arguments, remove the prefix and convert it all to uppercase for easier processing
+        let args = msg.content.substring(commandPrefix.length, msg.content.length).toUpperCase().split(" ");
+
+        //split the command up into its components eg, 'MTG' , 'L'
+        let command = args[0].split(commandConnector);
+
+        //remove command from args
+        args = args.slice(1);
+
+        if (command[0] === mtgCommandPrefix)
         {
-            msg.reply("you got mtg")
+            mtgSection.handleCommand(msg, command[1], args)
+        }
+        else if (command[0] === twitchCommandPrefix)
+        {
+            twitchSection.handleCommand(msg, command[1], args)
         }
         else
         {
-            msg.reply("Unrecognised Command")
+            //do nothing is unrecognised command
         }
-
-
     }
 });
 
@@ -92,26 +116,39 @@ function createOrCleanNecessaryDirectoriesAndFiles()
 console.log("about to login");
 try
 {
-    bot.login(botToken);
+    bot.login(botToken).then(clientId =>
+    {
+        utilities.logDebugText("bot logged in successfully")
+    });
 }
 catch (e)
 {
-    console.log(e);
+    utilities.logErrorText("failed to login the bot", e);
+}
+//********************************************************************************************************
+
+//Repeating Jobs
+//********************************************************************************************************
+
+//Stream announcements
+try
+{
+    let stream1 = new StreamAnnouncement(twitchConfig.channelsToBroadcastTo, twitchConfig.streamsToAdvertise[0]);
+
+    //10 seconds for dev purposes, should be every 5 minutes in prod
+    const interval = 5* 60 * 1000;
+    setInterval(
+        function()
+        {
+            stream1.announceStream(bot);
+            utilities.logDebugText("printing")
+        }
+        , interval
+    );
+}
+catch (e)
+{
+    utilities.logErrorText("error with twitch stream announcements", e)
 }
 
-//output message to console if debug value is 1 in botSettings.json
 //********************************************************************************************************
-utilities.logDebugText('bot.js loaded succesfully!');
-
-
-let stream1 = new StreamAnnouncement(twitchConfig.channelsToBroadcastTo, twitchConfig.streamsToAdvertise[0]);
-
-
-//Continuous jobs
-setInterval(function()
-                {
-                    stream1.announceStream(bot);
-                    utilities.logDebugText("printing")
-                }
-                , 10 * 1000
-);
