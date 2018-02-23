@@ -12,5 +12,15 @@ module.exports = {
         {
             console.log(text)
         }
+    },
+
+    /**
+     * TODO: Change this so it logs to a log file rather than the console
+     * @param location the location the error was thrown from
+     * @param error the error
+     */
+    logErrorText(location, error)
+    {
+        console.log(location + "\n"  + error)
     }
 };

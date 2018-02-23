@@ -6,6 +6,7 @@ when its added.
 
 
 Planned features:
+- better logging, log to file if error, log to console if debug
 - Store cards after they've been retrieved then search that json before sending off
 - deep info after first info
 - Price lookup (maybe purchase integration)

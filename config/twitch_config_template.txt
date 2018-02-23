@@ -4,5 +4,5 @@ clientID:
 {
     "clientID": "PLACEHOLDER",
     "channelsToBroadcastTo": ["CHANNEL_ID_1", "CHANNEL_ID_2", ...],
-    "channelsToAdvertise" : ["STREAMER_NAME_1", "STREAMER_NAME_2", ...]
+    "streamsToAdvertise" : ["STREAMER_NAME_1", "STREAMER_NAME_2", ...]
 }

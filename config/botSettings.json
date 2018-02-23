@@ -2,5 +2,6 @@
   "prefix" : "!",
   "debug" : true,
   "connector": "-",
-  "mtgPrefix" : "MTG"
+  "mtgPrefix" : "MTG",
+  "twitchPrefix" : "Twitch"
 }
