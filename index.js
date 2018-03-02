@@ -8,7 +8,7 @@ const StreamAnnouncement = require('./src/sections/twitch/classes/StreamAnnounce
 const MTG = require("./src/sections/mtg/MTG");
 const Twitch = require("./src/sections/twitch/Twitch");
 
-const lookup = require("./src/sections/mtg/commands/LookUp");
+const LookUp = require("./src/sections/mtg/commands/LookUp");
 
 //import local config files
 //********************************************************************************************************
@@ -60,11 +60,13 @@ bot.on ('message', msg =>
     if(msg.author.bot) return; //if the bot is the one sending the message exit this code block.
     if(msg.channel.type === 'dm') return; //if the bot receives a private / direct message, ignore it and exit this code block.
 
+    let content = msg.content.toUpperCase();
+
     //Checks if the message has the command prefix
-    if (msg.content.substring(0, commandPrefix.length) === commandPrefix)
+    if (content.substring(0, commandPrefix.length) === commandPrefix)
     {
         //split the command from the arguments, remove the prefix and convert it all to uppercase for easier processing
-        let args = msg.content.substring(commandPrefix.length, msg.content.length).toUpperCase().split(" ");
+        let args = content.substring(commandPrefix.length, content.length).split(" ");
 
         //split the command up into its components eg, 'MTG' , 'L'
         let command = args[0].split(commandConnector);
@@ -84,6 +86,15 @@ bot.on ('message', msg =>
         {
             //do nothing is unrecognised command
         }
+    }
+    else if(content.includes(LookUp.getOpening()) && content.includes(LookUp.getClosing()))
+    {
+        let start = content.indexOf(LookUp.getOpening()) + LookUp.getOpening().length;
+        let end = content.indexOf(LookUp.getClosing());
+
+        let cardInfo = content.substring(start, end).toUpperCase().split(" ");
+
+        mtgSection.handleCommand(msg, LookUp.getOpening(), cardInfo, true);
     }
 });
 
@@ -136,7 +147,7 @@ try
     let stream1 = new StreamAnnouncement(twitchConfig.channelsToBroadcastTo, twitchConfig.streamsToAdvertise[0]);
 
     //10 seconds for dev purposes, should be every 5 minutes in prod
-    const interval = 5* 60 * 1000;
+    const interval = 5 * 60 * 1000;
     setInterval(
         function()
         {

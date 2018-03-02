@@ -6,6 +6,8 @@ const displayDiscord = require('../../../commonFunctions/display_on_discord');
 const botSettings = require("./../../../../config/botSettings");
 
 const commandSuffix = "L";
+const alternateStartCommand = "<<";
+const alternateEndCommand = ">>";
 
 /**
  * This is the first iteration of the standard command class
@@ -49,8 +51,6 @@ module.exports = class LookUp
             }
             this.__lookupCard(msg, args.join(" "), set);
         });
-
-
     }
 
     /**
@@ -66,27 +66,35 @@ module.exports = class LookUp
         {
             mtgFunctions.getCardJson(cardName).then(results =>
             {
-            if(results.length === 0)
-            {
-                msg.reply("Couldn't find card")
-            }
-            else if(results.length === 1)
-            {
-                msg.reply("Here's the card I found");
-                this.__printCard(msg, results[0])
-            }
-            else
-            {
-                if(set !== undefined)
+                if(results.length === 0)
                 {
-                    this.__MultipleCardsFoundSetDefined(msg, cardName, set, results)
+                    msg.reply("Couldn't find card")
+                }
+                else if(results.length === 1)
+                {
+                    msg.reply("Here's the card I found");
+                    this.__printCard(msg, results[0])
                 }
                 else
                 {
-                    this.__MultipleCardsFoundSetUndefined(msg, cardName, results)
+                    let trimmedCardArr = [];
+                    results.forEach(card =>
+                    {
+                        if(card.imageUrl !== undefined)
+                        {
+                            trimmedCardArr.push(card)
+                        }
+                    });
+                    if(set !== undefined)
+                    {
+                        this.__MultipleCardsFoundSetDefined(msg, cardName, set, trimmedCardArr)
+                    }
+                    else
+                    {
+                        this.__MultipleCardsFoundSetUndefined(msg, cardName, trimmedCardArr)
+                    }
                 }
-            }
-        });
+            });
         }
         catch (ex)
         {
@@ -171,5 +179,23 @@ module.exports = class LookUp
             botSettings.prefix + botSettings.mtgPrefix
             + botSettings.connector + commandSuffix +
             " (card name) (optional three character set code)";
+    }
+
+    /**
+     * Gets the opening brackets used to identify an MTG card
+     * @return {string}
+     */
+    static getOpening()
+    {
+        return alternateStartCommand;
+    }
+
+    /**
+     * Gets the closing brackets used to identify an MTG card
+     * @return {string}
+     */
+    static getClosing()
+    {
+        return alternateEndCommand;
     }
 };

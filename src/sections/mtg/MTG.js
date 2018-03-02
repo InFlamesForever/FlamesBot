@@ -9,7 +9,8 @@ module.exports = class MTG
 {
     constructor()
     {
-        this.commands = [new LookUp()];
+        this.lookUp = new LookUp();
+        this.commands = [this.lookUp];
 
         this.__createFiles()
     }
@@ -27,15 +28,23 @@ module.exports = class MTG
         return descs;
     }
 
-    handleCommand(msg, commandSuffix, args)
+    handleCommand(msg, commandSuffix, args, isInMessageLookUp)
     {
-        this.commands.forEach(command =>
+        if(isInMessageLookUp !== undefined && isInMessageLookUp === false)
         {
-            if(command.getCommandSuffix() === commandSuffix)
+            this.commands.forEach(command =>
             {
-                command.doCommand(msg, args)
-            }
-        })
+                if(command.getCommandSuffix() === commandSuffix)
+                {
+                    command.doCommand(msg, args)
+                }
+            })
+        }
+        else
+        {
+            this.lookUp.doCommand(msg, args)
+        }
+
     }
 
     /**
