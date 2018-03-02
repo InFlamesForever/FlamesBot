@@ -113,21 +113,14 @@ module.exports = {
      * @param streamer the username of the streamer
      * @param streamTitle the title of the stream
      * @param game the game being played by the streamer
-     * @param thumbnailImageUrl the url of the stream thumbnail
-     * @param colour the colour of the text box
      */
-    printTwitchStream(channel, streamer, streamTitle, game, thumbnailImageUrl, colour)
+    printTwitchStream(channel, streamer, streamTitle, game)
     {
-        const textBoxColour = colour !== undefined ? colour : [255, 255, 255];
-        let message = new Discord.RichEmbed()
-            .setTitle(streamer + " is live!")
-            .setColor(textBoxColour)
-            .setDescription(streamTitle + "\n" + "Playing " + game)
-            .setURL("http://twitch.tv/" + streamer)
-            .setImage(thumbnailImageUrl)
-            .setFooter("By Flames Bot");
         channel.send(
-            message
+            streamer + " is live! \n" +
+            streamTitle + "\n" +
+            "Playing " + game + "\n" +
+            "http://twitch.tv/" + streamer
         );
     }
 };

@@ -22,7 +22,6 @@ module.exports = class StreamAnnouncement
         //initialise other variables
         this.__streamTitle = "";
         this.__streamGame = "";
-        this.__streamPicUrl = "";
         this.__isLive = false;
     }
 
@@ -54,10 +53,6 @@ module.exports = class StreamAnnouncement
                 {
                     this.__streamTitle = streamData[0].title;
 
-                    this.__streamPicUrl = streamData[0].thumbnail_url;
-                    this.__streamPicUrl = this.__streamPicUrl.replace("{width}", "300");
-                    this.__streamPicUrl = this.__streamPicUrl.replace("{height}", "200");
-
                     twitchApiLite.getGameByID(twitchConfig.clientID, streamData[0].game_id).then(game =>
                     {
                         this.__streamGame = game[0].name;
@@ -65,7 +60,7 @@ module.exports = class StreamAnnouncement
                         this.__announcementChannels.forEach(channelID =>
                         {
                             printer.printTwitchStream(bot.channels.get(channelID), this.__twitchUsername,
-                                this.__streamTitle, this.__streamGame, this.__streamPicUrl, [255, 0, 0])
+                                this.__streamTitle, this.__streamGame)
                         });
 
                         this.__isLive = true;
