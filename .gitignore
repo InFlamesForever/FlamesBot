@@ -60,5 +60,5 @@ typings/
 .idea/
 FlamesBot.iml
 config/private_config.json
-/config/twitch_config.json
+config/twitch_config.json
 resources/jsonCache/

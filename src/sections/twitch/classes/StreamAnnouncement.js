@@ -23,6 +23,7 @@ module.exports = class StreamAnnouncement
         this.__streamTitle = "";
         this.__streamGame = "";
         this.__isLive = false;
+        this.__lastUpdated = new Date();
     }
 
     /**
@@ -42,34 +43,50 @@ module.exports = class StreamAnnouncement
                         this.__isLive = false;
                         this.__cleanUp(bot);
                     }
+                    else if(this.__lastUpdated.getTime() + timeBetweenUpdates < new Date().getTime())
+                    {
+                        this.__cleanUp(bot);
+                        this.__outputStreamAnnouncement(bot);
+                    }
                 });
         }
         else
         {
-            twitchApiLite.getStreamDetailsByUsername(twitchConfig.clientID, this.__twitchUsername)
-                         .then(streamData =>
-            {
-                if(streamData !== undefined && streamData.length !== 0)
-                {
-                    this.__streamTitle = streamData[0].title;
-
-                    twitchApiLite.getGameByID(twitchConfig.clientID, streamData[0].game_id).then(game =>
-                    {
-                        this.__streamGame = game[0].name;
-
-                        this.__announcementChannels.forEach(channelID =>
-                        {
-                            printer.printTwitchStream(bot.channels.get(channelID), this.__twitchUsername,
-                                this.__streamTitle, this.__streamGame)
-                        });
-
-                        this.__isLive = true;
-                    });
-                }
-            })
-
+            this.__outputStreamAnnouncement(bot);
         }
 
+    }
+
+    /**
+     * Gets the stream data for a channel and sends it to a printer function to display it
+     *
+     * @param bot the discord bot client
+     * @private
+     */
+    __outputStreamAnnouncement(bot)
+    {
+        twitchApiLite.getStreamDetailsByUsername(twitchConfig.clientID, this.__twitchUsername)
+                     .then(streamData =>
+        {
+            if(streamData !== undefined && streamData.length !== 0)
+            {
+                 this.__streamTitle = streamData[0].title;
+
+                 twitchApiLite.getGameByID(twitchConfig.clientID, streamData[0].game_id).then(game =>
+             {
+                 this.__streamGame = game[0].name;
+
+                 this.__announcementChannels.forEach(channelID =>
+                 {
+                     printer.printTwitchStream(bot.channels.get(channelID), this.__twitchUsername,
+                         this.__streamTitle, this.__streamGame)
+                 });
+
+                 this.__isLive = true;
+                 this.__lastUpdated = new Date();
+             });
+            }
+        })
     }
 
     /**
