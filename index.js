@@ -120,7 +120,7 @@ function createOrCleanNecessaryDirectoriesAndFiles()
     //If the directory doesn't exist, create it
     if (!fs.existsSync(jsonCacheDir))
     {
-        utilities.logDebugText("folder doesn't exist");
+        utilities.logDebugText("json cache folder doesn't exist");
         fs.mkdirSync(jsonCacheDir);
     }
 
@@ -128,7 +128,7 @@ function createOrCleanNecessaryDirectoriesAndFiles()
     const errorDir = './logs';
     if(!fs.existsSync(errorDir))
     {
-        utilities.logDebugText("folder doesn't exist");
+        utilities.logDebugText("error folder doesn't exist");
         fs.mkdirSync(errorDir);
     }
 }
