@@ -56,45 +56,52 @@ bot.on('ready', () =>
 //********************************************************************************************************
 bot.on ('message', msg =>
 {
-    //reject the following input and exit
-    if(msg.author.bot) return; //if the bot is the one sending the message exit this code block.
-    if(msg.channel.type === 'dm') return; //if the bot receives a private / direct message, ignore it and exit this code block.
-
-    let content = msg.content.toUpperCase();
-
-    //Checks if the message has the command prefix
-    if (content.substring(0, commandPrefix.length) === commandPrefix)
+    try
     {
-        //split the command from the arguments, remove the prefix and convert it all to uppercase for easier processing
-        let args = content.substring(commandPrefix.length, content.length).split(" ");
+        //reject the following input and exit
+        if (msg.author.bot) return; //if the bot is the one sending the message exit this code block.
+        if (msg.channel.type === 'dm') return; //if the bot receives a private / direct message, ignore it and exit this code block.
 
-        //split the command up into its components eg, 'MTG' , 'L'
-        let command = args[0].split(commandConnector);
+        let content = msg.content.toUpperCase();
 
-        //remove command from args
-        args = args.slice(1);
-
-        if (command[0] === mtgCommandPrefix)
+        //Checks if the message has the command prefix
+        if (content.substring(0, commandPrefix.length) === commandPrefix)
         {
-            mtgSection.handleCommand(msg, command[1], args)
+            //split the command from the arguments, remove the prefix and convert it all to uppercase for easier processing
+            let args = content.substring(commandPrefix.length, content.length).split(" ");
+
+            //split the command up into its components eg, 'MTG' , 'L'
+            let command = args[0].split(commandConnector);
+
+            //remove command from args
+            args = args.slice(1);
+
+            if (command[0] === mtgCommandPrefix)
+            {
+                mtgSection.handleCommand(msg, command[1], args)
+            }
+            else if (command[0] === twitchCommandPrefix)
+            {
+                twitchSection.handleCommand(msg, command[1], args)
+            }
+            else
+            {
+                //do nothing is unrecognised command
+            }
         }
-        else if (command[0] === twitchCommandPrefix)
+        else if (content.includes(LookUp.getOpening()) && content.includes(LookUp.getClosing()))
         {
-            twitchSection.handleCommand(msg, command[1], args)
-        }
-        else
-        {
-            //do nothing is unrecognised command
+            let start = content.indexOf(LookUp.getOpening()) + LookUp.getOpening().length;
+            let end = content.indexOf(LookUp.getClosing());
+
+            let cardInfo = content.substring(start, end).toUpperCase().split(" ");
+
+            mtgSection.handleCommand(msg, LookUp.getOpening(), cardInfo, true);
         }
     }
-    else if(content.includes(LookUp.getOpening()) && content.includes(LookUp.getClosing()))
+    catch (e)
     {
-        let start = content.indexOf(LookUp.getOpening()) + LookUp.getOpening().length;
-        let end = content.indexOf(LookUp.getClosing());
-
-        let cardInfo = content.substring(start, end).toUpperCase().split(" ");
-
-        mtgSection.handleCommand(msg, LookUp.getOpening(), cardInfo, true);
+        utilities.logErrorText("Failed with command: " + msg.content, e)
     }
 });
 
@@ -108,13 +115,21 @@ function createOrCleanNecessaryDirectoriesAndFiles()
 {
     //Json directory used for storing data
     //May eventually be replaced by a database
-    const dir = './resources/jsonCache';
+    const jsonCacheDir = './resources/jsonCache';
 
     //If the directory doesn't exist, create it
-    if (!fs.existsSync(dir))
+    if (!fs.existsSync(jsonCacheDir))
     {
-        console.log("folder doesn't exist");
-        fs.mkdirSync(dir);
+        utilities.logDebugText("folder doesn't exist");
+        fs.mkdirSync(jsonCacheDir);
+    }
+
+    //Logging folder
+    const errorDir = './logs';
+    if(!fs.existsSync(errorDir))
+    {
+        utilities.logDebugText("folder doesn't exist");
+        fs.mkdirSync(errorDir);
     }
 }
 
@@ -124,7 +139,7 @@ function createOrCleanNecessaryDirectoriesAndFiles()
 
 // Bot will now attempt to login
 //********************************************************************************************************
-console.log("about to login");
+utilities.logDebugText("about to login");
 try
 {
     bot.login(botToken).then(clientId =>
@@ -153,8 +168,8 @@ try
         {
             stream1.announceStream(bot);
             utilities.logDebugText("printing")
-        }
-        , interval
+        },
+        interval
     );
 }
 catch (e)

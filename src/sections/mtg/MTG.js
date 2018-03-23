@@ -12,7 +12,7 @@ module.exports = class MTG
         this.lookUp = new LookUp();
         this.commands = [this.lookUp];
 
-        this.__createFiles()
+        this.__deleteFiles()
     }
 
     /**
@@ -48,10 +48,10 @@ module.exports = class MTG
     }
 
     /**
-     * creates the files that cache the mtg set and card information
+     * deletes old files
      * @private
      */
-    __createFiles()
+    __deleteFiles()
     {
         try
         {
@@ -65,7 +65,7 @@ module.exports = class MTG
         }
         catch (ex)
         {
-            utilities.logDebugText("Sets json does not exist \n" + ex)
+            utilities.logErrorText("Something went wrong deleting the sets json \n" + ex)
         }
 
         try
@@ -80,7 +80,7 @@ module.exports = class MTG
         }
         catch (ex)
         {
-            utilities.logDebugText("Cards json does not exist \n" + ex)
+            utilities.logErrorText("Something went wrong deleting the cards json \n" + ex)
         }
     }
 
