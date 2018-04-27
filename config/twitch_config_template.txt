@@ -3,6 +3,14 @@ clientID:
 
 {
     "clientID": "PLACEHOLDER",
-    "channelsToBroadcastTo": ["CHANNEL_ID_1", "CHANNEL_ID_2", ...],
-    "streamsToAdvertise" : ["STREAMER_NAME_1", "STREAMER_NAME_2", ...]
+    "channelsToBroadcastTo": [
+        ["CHANNEL_ID_1", *isChannel@Able*],
+        ["CHANNEL_ID_2", true],
+        ...
+    ],
+    "streamsToAdvertise" : [
+        ["STREAMER_NAME_1", *ShouldWe@EveryoneForThisStreamer*],
+        ["STREAMER_NAME_2", true],
+        ...
+    ]
 }

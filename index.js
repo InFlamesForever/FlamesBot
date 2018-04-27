@@ -89,6 +89,7 @@ bot.on ('message', msg =>
                 //do nothing is unrecognised command
             }
         }
+        //Else for the easy lookup of magic cards using << cardname >>
         else if (content.includes(LookUp.getOpening()) && content.includes(LookUp.getClosing()))
         {
             let start = content.indexOf(LookUp.getOpening()) + LookUp.getOpening().length;

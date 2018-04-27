@@ -4,11 +4,10 @@
   "description": "An MTG bot for discord",
   "main": "src/index.js",
   "dependencies": {
-    "discord.js": "^11.2.1",
-    "fs": "0.0.1-security",
+    "discord.js": "^11.3.2",
     "mtgsdk": "^0.3.0",
     "redis": "^2.8.0",
-    "request": "^2.83.0",
+    "request": "^2.85.0",
     "tinyreq": "^3.3.1",
     "twitch-api-lite": "0.0.6"
   },
